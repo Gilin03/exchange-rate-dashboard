@@ -2,7 +2,15 @@
 
 Frankfurter API에서 USD/KRW 환율을 조회하고 Supabase에 날짜별 기록을 저장하는 React 대시보드입니다. 사용자는 현재 환율, 날짜별 추이, 이전 기록과의 변화량을 확인하고 그래프를 확대·이동할 수 있습니다.
 
-## 프로젝트 개요
+## Demo
+
+| 화면 | 설명 |
+| --- | --- |
+| ![시작 화면](docs/assets/readme/01-overview.png) | 환율 정보판의 시작 화면 |
+| ![검증 모드](docs/assets/readme/02-main-feature.png) | 검증 모드를 연 화면 |
+| ![Timeout 처리 결과](docs/assets/readme/03-result.png) | Timeout 모의실험 후 로그 화면 |
+
+## 프로젝트 소개
 
 이 프로젝트는 다음 흐름을 하나의 화면에서 제공하는 것을 목표로 합니다.
 
@@ -29,28 +37,30 @@ Frankfurter API에서 USD/KRW 환율을 조회하고 Supabase에 날짜별 기�
 
 | 구분 | 기술 | 사용 목적 |
 | --- | --- | --- |
-| Frontend | React `19.2.8` | 대시보드 UI와 상태 관리 |
-| Build | Vite `8.2.2` | 개발 서버와 운영 빌드 |
-| Chart | Recharts `3.10.1` | 환율 추이 Area 차트와 Tooltip |
-| Database | Supabase JS `2.112.3` | `exchange_records` 조회·저장·갱신 |
+| Frontend | React `^19.2.8` | 대시보드 UI와 상태 관리 |
+| Build | Vite `^8.2.2` | 개발 서버와 운영 빌드 |
+| Chart | Recharts `^3.10.1` | 환율 추이 Area 차트와 Tooltip |
+| Database | Supabase JS `^2.112.3` | `exchange_records` 조회·저장·갱신 |
 | External API | Frankfurter API | USD/KRW 환율 원자료 |
-| Lint | oxlint `1.79.0` | 정적 코드 검사 |
+| Lint | oxlint `^1.79.0` | 정적 코드 검사 |
 
-## 동작 흐름
+## 시스템 구조
 
 ```mermaid
 flowchart LR
     User["사용자"] --> App["React 대시보드"]
-    App --> API["Frankfurter API\nGET /v2/rate/USD/KRW"]
+    App --> API["Frankfurter API / GET /v2/rate/USD/KRW"]
     API --> App
-    App --> DB[("Supabase\nexchange_records")]
+    App --> DB[("Supabase / exchange_records")]
     DB --> App
     App --> View["환율 카드·기록·그래프·검증 모드"]
 ```
 
+## 주요 동작 흐름
+
 페이지가 열리면 저장 기록을 먼저 불러온 다음 최신 환율을 조회합니다. 정상 응답에는 현재값을 반영하고 오늘 날짜의 기록을 확인한 뒤 갱신 또는 신규 저장합니다. API 응답이 실패하거나 `rate`, `date` 필드 형식이 맞지 않으면 새 값을 저장하지 않고 오류 상태로 전환합니다.
 
-## 주요 사용자 흐름
+## 사용 방법
 
 1. 페이지에 진입하면 Supabase 기록과 최신 API 데이터를 불러옵니다.
 2. `새로고침` 버튼으로 최신 환율을 다시 조회할 수 있습니다.
@@ -61,7 +71,7 @@ flowchart LR
 
 ## 과제 기능 점검 항목
 
-현재 소스에서 확인되는 구현 여부를 정리한 표입니다. 실제 브라우저 조작을 다시 수행한 결과와는 구분해야 합니다.
+현재 소스에서 확인되는 구현 내용을 정리한 표입니다. 실제 브라우저 조작 결과는 `테스트 및 검증`에 기록했습니다.
 
 | ID | 점검 항목 | 소스에서 확인한 구현 |
 | --- | --- | --- |
@@ -76,7 +86,7 @@ flowchart LR
 | T05-09 | 확대 상태 이동 | 확대 후 마우스 Drag/Pan |
 | T05-10 | 좁은 화면 사용 | `App.css`의 반응형 미디어 쿼리 |
 
-## 설치 및 실행
+## 시작하기
 
 ### 사전 요구사항
 
@@ -145,7 +155,7 @@ npm run preview
 
 검증 모드의 오류는 실제 API 호출 결과가 아니라 `simulateError()`가 만드는 테스트 경로입니다.
 
-## Supabase 데이터 구조
+## 데이터베이스 구조
 
 코드는 `exchange_records` 테이블에서 아래 필드를 사용합니다.
 
@@ -181,6 +191,33 @@ npm run preview
 | `npm run build` | 운영용 정적 파일 빌드 |
 | `npm run preview` | 빌드 결과 미리보기 |
 | `npm run lint` | oxlint 정적 검사 |
+
+## 테스트 및 검증
+
+| 구분 | 검증 항목 | 명령 또는 절차 | 결과 |
+| --- | --- | --- | --- |
+| 자동 | 의존성 설치 | `npm ci` | 통과, 73개 패키지 감사에서 취약점 0건 |
+| 자동 | 린트 | `npm run lint` | 종료 코드 0, `src/App.jsx` 경고 2건 |
+| 자동 | production build | `npm run build` | 통과, 번들 크기 경고 1건 |
+| 자동 | 테스트 | `package.json`의 scripts 확인 | `test` script 없음 |
+| 수동 | 시작 화면 | `http://127.0.0.1:5174/` 접속 | 화면 확인 및 `01-overview.png` 캡처 |
+| 수동 | 검증 모드 | `검증 모드` 버튼 선택 | 패널·테스트 버튼 확인 및 `02-main-feature.png` 캡처 |
+| 수동 | Timeout 처리 | `Timeout` 선택 후 로그 확인 | `Timeout 감지`, `시간 초과 처리 분기로 이동` 로그 확인 및 `03-result.png` 캡처 |
+
+수동 화면 확인은 저장소에 실제 Supabase 환경변수가 없어 로컬 placeholder 값을 사용한 실행입니다. 따라서 캡처에서는 저장 기록이 비어 있으며, Supabase 연동 성공을 검증한 결과로 해석하지 않습니다. Frankfurter API 조회와 검증 모드 화면은 실제 실행으로 확인했습니다.
+
+## 개발 중 해결한 문제
+
+### 차트 확대·이동 조작
+
+- `ReferenceArea`와 차트 마우스 이벤트로 드래그 영역 확대를 구현했습니다.
+- 확대 후 마우스 Drag/Pan, 좌우 이동 버튼, 휠 확대·축소, 전체보기 초기화 컨트롤을 제공합니다.
+- 기간을 바꾸면 확대·이동 상태를 초기화합니다.
+
+### API 장애 처리 확인 경로
+
+- Timeout·인증 실패·호출 제한·오프라인·응답 형식 변경을 실제 외부 장애 없이 `simulateError()`로 모의실험합니다.
+- 조회 실패 시 마지막 정상값 유지와 오래된 데이터 상태 표시를 `fetchRate()`에서 처리합니다.
 
 ## 프로젝트 구조
 
