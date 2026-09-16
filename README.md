@@ -6,8 +6,14 @@
   <img src="docs/assets/readme/01-overview.png" alt="USD/KRW 환율 정보판 시작 화면" width="900" />
 </p>
 
+### 데이터 호출 경로
+
 <p align="center">
-  <a href="https://github.com/Gilin03/exchange-dashboard">GitHub Repository</a>
+  <img src="docs/assets/readme/data-flow-diagram.svg" alt="데이터 호출 경로 그림" width="900" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/Gilin03/exchange-rate-dashboard">GitHub Repository</a>
 </p>
 
 <p align="center">
