@@ -9,7 +9,7 @@
 ### 데이터 호출 경로
 
 <p align="center">
-  <img src="docs/assets/readme/data-flow-diagram.svg" alt="데이터 호출 경로 그림" width="900" />
+  <img src="docs/assets/readme/dashboard-data-flow.jpg" alt="데이터 호출 경로 그림" width="900" />
 </p>
 
 <p align="center">
