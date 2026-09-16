@@ -1,4 +1,4 @@
-# USD/KRW 환율 정보판
+# USD/KRW 환율 조회 및 추이 분석 대시보드
 
 > Frankfurter API의 USD/KRW 환율을 조회하고 Supabase에 날짜별로 기록해 추이와 이전 기록과의 변화를 보여주는 React 대시보드입니다.
 
